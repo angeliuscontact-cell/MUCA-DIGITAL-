@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUCA - Your Digital Solution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+        --yellow: #ffffff;
+        --green: #9acd32;
+        --lime: #ffffff;
+        --black:  #b40d61;
+        --dark-bg: #ffffff;
+        --white: #ffffff;
+        --gray: #888888;
+        --light-gray: #cccccc;
+        }
+        /* --- 1. ANIMATION CONTAINER --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -100;
+            background: linear-gradient(to right, #163375, #180cc0, #b40d61); /* Darker professional blend */
+            pointer-events: none;
+        }
+
+        /* --- 2. GLOBAL STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; } /* Enables smooth scrolling */
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            background: #050505;
+        }
+
+        .gradient-text {
+
+            background: linear-gradient(to bottom, #ffffff, #bbd6ff, #f8f8f8);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+      
+            
+        }
+
+        .gradient-text2 {
+            background: linear-gradient(90deg, #b8aedf, #ffffff);
+            background-clip: text;
+            -webkit-text-fill-color: transparent; 
+        }
+
+    
+
+        /* --- 3. NAVBAR --- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: 0.4s;
+        }
+
+        .navbar.scrolled {
+            background-color: rgb(180, 13, 97, 0.1);
+            backdrop-filter: blur(12px);
+            
+        }
+    
+        nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            padding-top: 30px;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        nav ul { 
+            display: flex; 
+            list-style: none; 
+        }
+        nav ul li { margin-left: 30px; }
+        nav ul li a {
+            color:rgb(255, 255, 255);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            display: block;
+            font-size: 0.95rem;
+            
+        }
+        nav ul li a:hover,nav ul li a:focus { color: #00e1ff; }
+        .whatsapp a {
+            
+            border-radius: 10px;
+        }
+        .whatsapp a:hover  {
+            color: white !important;;
+        }
+        
+        /* Hamburger Menu */
+        .hamburger1 { display: none; }
+        .hamburger1 label { width: 40px; display: flex; flex-direction: column; cursor: pointer; }
+        #hamburger1-input { display: none; }
+        .hamburger1 .line {
+            height: 3px;
+            margin: 3px 0;
+            border-radius: 6px;
+            background-color: white;
+            transition: all 0.4s ease-in-out;
+        }
+        .hamburger1 .line1 { width: 50%; align-self: flex-end;}
+        .hamburger1 .line2 { width: 100%; }
+        .hamburger1 .line3 { width: 75%; align-self: flex-end;}
+
+        #hamburger1-input:checked ~ .line1 { width: 100%; transform: rotate(45deg) translate(5px, 6px); }
+        #hamburger1-input:checked ~ .line2 { opacity: 0; }
+        #hamburger1-input:checked ~ .line3 { width: 100%; transform: rotate(-45deg) translate(5px, -6px); }
+
+        /* Mobile Menu Dropdown */
+        .menu {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            display: none; /* Toggled via JS/CSS */
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            list-style: none;
+            text-align: center;
+            z-index: 999;
+            
+        }
+        .menu li { padding: 15px; }
+        .menu li a { color: white; font-size: 1.2rem; text-decoration: none; }
+
+        /* --- 4. HERO SECTION --- */
+        .hero {
+            display: flex;
+            align-items: center;
+            padding: 120px 0 80px;
+            min-height: 80vh;
+        }
+
+        .hero-content { flex: 1; padding-right: 50px; }
+        .hero-content h1 { font-size: 5rem; margin-bottom: 25px; line-height: 1.1; font-weight: 800; }
+        .hero-content p { margin-bottom: 35px; font-size: 1.1rem; color:white; line-height: 1.6; }
+        .hero-image { flex: 1; display: flex; justify-content: center; }
+        .hero-image img { width: 100%; max-width: 600px; filter: drop-shadow(0 0 30px rgba(0, 225, 255, 0.15)); border-radius: 20px; }
+
+        .btn {
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: 0.3s;
+            margin:  0 auto;
+        }
+        .portfolio-btn { text-align: center; margin-top: 20px; }
+        .btn-white { background: white; color: #000; margin-right: 15px; }
+        .btn-white:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,255,255,0.2); }
+        .btn-outline { border: 1px solid rgba(255,255,255,0.5); color: white; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+        .section-title { 
+            text-align: center;
+            margin: 100px 0 60px; 
+            font-size: 3rem; 
+            font-weight: 800;
+        }
+        /* --- 5. SERVICES --- */
+        .container2 {
+        padding: 90px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+        }
+
+        .section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 60px;
+        margin-bottom: 80px;
+        flex-wrap: wrap;
+        }
+
+        .what-we-do-title {
+        display: flex;
+        flex-direction: column;
+        }
+
+        .what-we-do-title .outline-text {
+        font-size: clamp(48px, 8vw, 90px);
+        font-weight: 900;
+        color: transparent;
+        -webkit-text-stroke: 2px var(--yellow);
+        
+        line-height: 1;
+        
+        }
+
+        .what-we-do-title .yellow-text {
+        font-size: clamp(48px, 8vw, 90px);
+        font-weight: 900;
+        color: var(--yellow);
+        line-height: 1;
+        
+        }
+
+        .what-we-do-subtitle h3 {
+        font-size: clamp(28px, 4vw, 48px);
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--white);
+        text-transform: uppercase;
+        }
+
+        /* Services Grid */
+        .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        }
+
+        .service-card {
+        background-color: var(--black);
+        padding: 40px 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        min-height: 250px;
+        }
+
+        .service-card h1{
+        font-size: 48px;
+        font-weight: 900;
+        color: var(--yellow);
+        margin-bottom: 20px;
+        }
+
+        .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 0;
+        background-color: var(--yellow);
+        transition: height 0.3s ease;
+        }
+
+        .service-card:hover::before {
+        height: 100%;
+        }
+
+        .service-card:hover {
+        background-color: rgba(255, 229, 0, 0.05);
+        }
+
+        .service-card.highlighted {
+        background-color: rgba(50, 50, 50, 0.5);
+        }
+
+        .service-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--yellow);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        line-height: 1.3;
+        }
+
+        .service-description {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--light-gray);
+        }
+
+
+        /* --- 6. 3D CAROUSEL --- */
+        .carousel-3d-scene {
+            width: 100%;
+            height: 450px;
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .carousel-inner {
+            width: 400px;
+            height: 250px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .carousel-item {
+            position: absolute;
+            width: 400px;
+            height: 250px;
+            left: 0; top: 0;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .carousel-controls { text-align: center; margin-bottom: 100px; }
+        .carousel-controls .arrow {
+            background: rgba(255,255,255,0.1);
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            width: 50px; height: 50px;
+            border-radius: 50%; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            margin: 0 10px; 
+            transition: 0.3s;
+        }
+        .carousel-controls .arrow:hover { background: white; color: black; }
+
+        /* --- 7. PRICING --- */
+        .toggle-btn {
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.1rem;
+        }
+        
+        /* Custom Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2c3e50; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #00e1ff; }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .pricing-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+            perspective: 1000px; 
+            margin-bottom: 100px;
+        }
+
+        .price-card {
+           position: relative;
+           height: 500px;
+           transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+           transform-style: preserve-3d;
+        }
+        .price-card.flipped { transform: rotateY(180deg); }
+
+        .price-box {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .price-box.back { transform: rotateY(180deg); background: rgba(0, 225, 255, 0.05); border-color: rgba(0, 225, 255, 0.3); }
+        .price-box.featured { border-color: #00e1ff; background: rgba(0, 225, 255, 0.08); }
+        
+        .price-box h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        .price { font-size: 3rem; font-weight: 800; margin: 15px 0 30px; }
+        .price span { font-size: 1rem; font-weight: 400; opacity: 0.6; }
+        
+        .plan-features { list-style: none; opacity: 0.8; margin-bottom: 30px; text-align: left; width: 100%; padding-left: 20px;}
+        .plan-features li { margin-bottom: 12px; }
+        .plan-features li::before { content: "✓"; color: #00e1ff; margin-right: 10px; font-weight: bold; }
+
+        /* --- 8. CONTACT --- */
+        .wrapper { 
+            display: grid; 
+            grid-template-columns: 3fr 2fr; 
+             background: rgba(0, 225, 255, 0.2);
+            border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            overflow: hidden; 
+            margin-bottom: 100px;
+        }
+
+        .form { padding: 50px; }
+        .contacts { 
+            padding: 50px; 
+            background: rgba(255, 255, 255, 0.3); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .form h4 { color: #00e1ff; margin-bottom: 10px; letter-spacing: 1px; font-size: 0.9rem; }
+        .form-input {
+            width: 100%; padding: 15px 0; margin-bottom: 25px;
+            background: transparent; border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.9);
+            color: white; outline: none; font-size: 1rem;
+            transition: 0.3s;
+        }
+        ::placeholder{color:white;}
+        .form-input:focus { border-bottom-color: #00e1ff; }
+        textarea.form-input { resize: vertical; }
+        
+        .submit-btn {
+            background: white; color: black; border: none; 
+            padding: 15px 40px; border-radius: 50px; 
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .submit-btn:hover { background: #00e1ff; color: white; box-shadow: 0 5px 15px rgba(0,225,255,0.3); }
+
+        .contacts ul { list-style: none; }
+        .contacts li { margin-bottom: 20px; font-size: 1.1rem; opacity: 0.9; }
+        .contacts .big { font-size: 1.5rem; font-weight: 700; margin-bottom: 40px; line-height: 1.4; }
+
+        /* --- 9. FOOTER --- */
+      .footer {
+  padding: 60px 40px;
+  background: linear-gradient(to right, #163375, #180cc0, #b40d61);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.footer-logo img {
+  height: 60px;
+  margin: 0 auto 20px;
+}
+
+.footer-logo .tagline {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--lime);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-links {
+  display: flex;
+  gap: 20px;
+}
+
+.social-links a {
+  color: var(--white);
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: var(--lime);
+}
+
+.social-links svg {
+  width: 24px;
+  height: 24px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 40px;
+}
+
+.footer-links a {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--lime);
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--yellow);
+}
+
+.copyright {
+  font-size: 12px;
+  color: white;}
+
+        @media (max-width: 1400px) {
+            .navbar ul { display: none; }
+            .hamburger1 { display: block; }
+            .container{max-width: 800px;}
+           .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+        }
+
+        /* --- 10. RESPONSIVE --- */
+        @media (max-width: 900px) {
+           
+            .navbar ul { display: none; }
+            .hamburger1 { display: block; }
+            
+            .hero { flex-direction: column; text-align: center; padding-top: 80px; }
+            .hero-content { padding-right: 0; margin-bottom: 50px; }
+            .hero-content h1 { font-size: 3rem; }
+            
+            .service-row, .service-row.reverse { flex-direction: column; text-align: center; gap: 30px; }
+            .service-img img { max-width: 100%; }
+
+            .wrapper { grid-template-columns: 1fr; }
+            .contacts { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); }
+            
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+        }
+
+        @media (max-width: 600px) {
+            .carousel-3d-scene { perspective: 600px; height: 350px; }
+            .carousel-inner, .carousel-item { width: 280px; height: 180px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            
+            .price-card { height: 550px; } /* taller for mobile text wrapping */
+            .services-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+        }
+        
+        /* Utility for animation reveals */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <header class="navbar">
+        <nav>
+            <a href="#" class="logo">muca<span style="color:#00e1ff">.</span></a>
+            
+            <ul>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#works">Portfolio</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="whatsapp"><a href="#" style="color: #00e1ff;">Whatsapp Us</a></li>
+            </ul>
+
+            <div class="hamburger1">
+                <label for="hamburger1-input">
+                    <input type="checkbox" id="hamburger1-input" />
+                    <span class="line line1"></span>
+                    <span class="line line2"></span>
+                    <span class="line line3"></span>
+                </label>
+            </div>
+        </nav>
+    </header>
+
+    <ul class="menu" id="mobile-menu">
+        <li><a href="#services" onclick="closeMenu()">Services</a></li>
+        <li><a href="#works" onclick="closeMenu()">Portfolio</a></li>
+        <li><a href="#pricing" onclick="closeMenu()">Pricing</a></li>
+        <li><a href="#contact" onclick="closeMenu()">Contact Us</a></li>
+        <li><a href="#whatsapp" onclick="closeMenu()">WhatsApp Us</a></li>
+    </ul>
+
+    <section class="hero container2">
+        <div class="hero-content" data-aos="fade-up">
+            <h1 class="gradient-text">Ready to take your digital presence to the next level?</h1>
+            <p>We work with global brands to help them achieve their goals through innovative design and strategy.</p>
+            <div class="hero-btns">
+                <a href="#services" class="btn btn-white">Our Services</a>
+                <a href="#contact" class="btn btn-outline">Get Started</a>
+            </div>
+        </div>
+        <div class="hero-image" data-aos="fade-left">
+            <img src="Black and Grey Clean Modern Minimalist Creative Technology Logo (3).png" alt="Hero Graphic">
+        </div>
+    </section>
+
+    <section class="container2" id="services">
+      <div class="section-header">
+        <div class="what-we-do-title">
+          <h2 class="outline-text">WHAT</h2>
+          <h2 class="yellow-text">WE DO</h2>
+        </div>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card highlighted">
+          <h1>01</h1>
+          <h4 class="service-title">BRAND<br />POSITIONING</h4>
+          <p class="service-description">Breathe life into your brand and stand out from your competitors. Let our team realize your goal through a great brand positioning strategy!</p>
+        </div>
+        <div class="service-card">
+          <h1>02</h1>
+          <h4 class="service-title">SOCIAL MEDIA<br />MARKETING</h4>
+          <p class="service-description">Do you want to know more about your target audience and build a lasting relationship with them? Choose Social Media Marketing...</p>
+        </div>
+        <div class="service-card highlighted">
+          <h1>03</h1>
+          <h4 class="service-title">WEBSITE<br />DESIGN</h4>
+          <p class="service-description">Your web design can either generate repeat visitors to your website or make them run away. Let our professional team handle yours!</p>
+        </div>
+        <div class="service-card ">
+        <h1>04</h1>
+          <h4 class="service-title">MOBILE APP<br />DEVELOPMENT</h4>
+          <p class="service-description">Does your business need brand awareness and regular interactions with your target audience? Having a mobile app can help you fulfill your business dream!</p>
+        </div>
+        <div class="service-card highlighted">
+          <h4 class="service-title">CREATIVE<br />DESIGN</h4>
+          <p class="service-description">When words and graphics are combined, they create a powerful message and lasting impression for your brand. Let our creative graphic design team say it in style!</p>
+        </div>
+        <div class="service-card">
+          <h4 class="service-title">INTEGRATED<br />CAMPAIGNS (360)</h4>
+          <p class="service-description">Let your brand live like a beautiful adventure in each mind. Choose Integrated Campaign and offer a 360 experience to your audience!</p>
+        </div>
+        
+      </div>
+    </section>
+
+    <section id="works" class="works container2">
+        <div class="section-header">
+        <div class="what-we-do-title">
+          <h2 class="outline-text">Our</h2>
+          <h2 class="yellow-text">Works</h2>
+        </div>
+      </div>
+
+        <div class="carousel-3d-scene">
+            <div class="carousel-inner" id="carousel">
+                <div class="carousel-item"><img src="Screenshot (175).png" alt="1"></div>
+                <div class="carousel-item"><img src="Screenshot (90).png" alt="2"></div>
+                <div class="carousel-item"><img src="Screenshot (90).png" alt="3"></div>
+                <div class="carousel-item"><img src="Screenshot (175).png" alt="4"></div>
+                <div class="carousel-item"><img src="Screenshot (90).png" alt="5"></div>
+            </div>
+        </div>
+        <div class="carousel-controls">
+            <button class="arrow" onclick="rotateCarousel(-1)">&#10094;</button>
+            <button class="arrow" onclick="rotateCarousel(1)">&#10095;</button>
+             <div class="hero-btns portfolio-btn"><a href="#" class="btn btn-white">Download Our Portfolio</a></div>
+        </div>
+
+                
+    </section>
+
+    <section id="pricing" class="pricing container2">
+        <div class="section-header">
+        <div class="what-we-do-title">
+          <h2 class="outline-text"> Pricing</h2>
+          <h2 class="yellow-text">Plans</h2>
+        </div>    
+      </div>
+
+        <div class="toggle-btn">
+            <span>Monthly</span>
+            <label class="switch">
+                <input class="toggle" type="checkbox" id="checkbox" onchange="togglePricing()">
+                <span class="slider round"></span>
+            </label>
+            <span>Annually (Save 20%)</span>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <div class="price-box front">
+                    <h3>Basic</h3>
+                    <div class="price">$49<span>/mo</span></div>
+                    <ul class="plan-features">
+                        <li>Responsive Design</li>
+                        <li>Standard Hosting</li>
+                        <li>Email Support</li>
+                    </ul>
+                </div>
+                <div class="price-box back">
+                    <h3>Basic</h3>
+                    <div class="price">$490<span>/yr</span></div>
+                    <ul class="plan-features">
+                        <li>Responsive Design</li>
+                        <li>Standard Hosting</li>
+                        <li>Email Support</li>
+                        <li><strong>2 Months Free</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="price-card">
+                <div class="price-box front featured">
+                    <h3>Pro</h3>
+                    <div class="price">$99<span>/mo</span></div>
+                    <ul class="plan-features">
+                        <li>Everything in Basic</li>
+                        <li>SEO Optimization</li>
+                        <li>24/7 Priority Support</li>
+                        <li>Social Media Kit</li>
+                    </ul>
+                </div>
+                <div class="price-box back featured">
+                    <h3>Pro</h3>
+                    <div class="price">$990<span>/yr</span></div>
+                    <ul class="plan-features">
+                        <li>Everything in Basic</li>
+                        <li>SEO Optimization</li>
+                        <li>24/7 Priority Support</li>
+                        <li>Social Media Kit</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="price-card">
+                <div class="price-box front">
+                    <h3>Enterprise</h3>
+                    <div class="price">$199<span>/mo</span></div>
+                    <ul class="plan-features">
+                        <li>Custom Solutions</li>
+                        <li>Dedicated Manager</li>
+                        <li>Advanced Analytics</li>
+                        <li>Unlimited Revisions</li>
+                    </ul>
+                </div>
+                <div class="price-box back">
+                    <h3>Enterprise</h3>
+                    <div class="price">$1990<span>/yr</span></div>
+                    <ul class="plan-features">
+                        <li>Custom Solutions</li>
+                        <li>Dedicated Manager</li>
+                        <li>Advanced Analytics</li>
+                        <li>Unlimited Revisions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="container2">
+        <div class="section-header">
+        <div class="what-we-do-title">
+          <h2 class="outline-text">CONTACT</h2>
+          <h2 class="yellow-text">Us</h2>
+        </div>    
+      </div>
+        <div class="wrapper">
+            <div class="form">
+                <h4>GET IN TOUCH</h4>
+                <h2>Send us a message</h2>
+                <form id="contact-form">
+                    <input class="form-input" type="text" placeholder="Your Name" required>
+                    <input class="form-input" type="email" placeholder="Your Email" required>
+                    <input class="form-input" type="text" placeholder="Company Name">
+                    <textarea class="form-input" rows="4" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+            <div class="contacts">
+                <ul>
+                    <li class="big">We help businesses grow their digital presence.</li>
+                    <li><strong>Email:</strong> contact@muca.agency</li>
+                    <li><strong>Phone:</strong> +1 (555) 123-4567</li>
+                    <li><strong>Address:</strong> 123 Digital Ave, Tech City</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+     <footer class="footer">
+      <div class="footer-logo">
+        <img src="logo.jpeg" alt="Sphere Media Technologies" />
+        <p class="tagline">GROWING BRANDS INTELLIGENTLY...</p>
+      </div>
+      <div class="footer-content">
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2Z"/></svg></a>
+        </div>
+        <div class="footer-links">
+          <a href="#">PRIVACY POLICY</a>
+          <a href="#">CONTACT US</a>
+        </div>
+        <p class="copyright">Muca Digitals ~ All rights reserved</p>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // 1. Initialize Scroll Animations
+        AOS.init({ duration: 800, once: true });
+
+        // 2. Navbar Scroll Effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener("scroll", () => {
+             navbar.classList.toggle("scrolled", window.scrollY > 50);
+        });
+
+        // 3. Mobile Menu Toggle
+        const hamburgerInput = document.getElementById("hamburger1-input");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        hamburgerInput.addEventListener('change', () => {
+            mobileMenu.style.display = hamburgerInput.checked ? 'block' : 'none';
+        });
+
+        function closeMenu() {
+            hamburgerInput.checked = false;
+            mobileMenu.style.display = 'none';
+        }
+
+        // 4. Pricing Toggle Logic
+        function togglePricing() {
+            const checkBox = document.getElementById("checkbox");
+            const cards = document.querySelectorAll(".price-card");
+            
+            cards.forEach(card => {
+                if (checkBox.checked) {
+                    card.classList.add("flipped");
+                } else {
+                    card.classList.remove("flipped");
+                }
+            });
+        }
+
+        // 5. 3D Carousel Logic
+        const carousel = document.getElementById('carousel');
+        const items = document.querySelectorAll('.carousel-item');
+        const itemCount = items.length;
+        const angle = itemCount ? 360 / itemCount : 0; // guard for zero items
+        let currentRotation = 0;
+
+        function layoutCarousel() {
+            if (!itemCount) return;
+            const zDistance = window.innerWidth < 600 ? 250 : 400; 
+            items.forEach((item, index) => {
+                const itemAngle = angle * index;
+                item.style.transform = `rotateY(${itemAngle}deg) translateZ(${zDistance}px)`;
+            });
+        }
+
+        function rotateCarousel(direction) {
+            if (!carousel || !itemCount) return;
+            currentRotation -= direction * angle;
+            carousel.style.transform = `rotateY(${currentRotation}deg)`;
+        }
+
+        // Auto rotate
+        if (itemCount) setInterval(() => rotateCarousel(1), 5000);
+        window.addEventListener('resize', layoutCarousel);
+        layoutCarousel();
+
+        // 6. Form Handling (Demo Simulation)
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! We will contact you shortly.');
+                this.reset();
+            });
+        }
+
+        const newsletterForm = document.getElementById('newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Subscribed successfully!');
+                this.reset();
+            });
+        }
+
+        // 7. Footer Year
+        const yearEl = document.getElementById("year");
+        if (yearEl) {
+            yearEl.textContent = new Date().getFullYear();
+        }
+
+        // 8. Three.js Background Animation
+        const initAnimation = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x050505, 10, 60);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 20;
+            camera.position.y = 5;
+            camera.rotation.x = -0.2;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Terrain
+            const geometry = new THREE.PlaneGeometry(160, 160, 60, 60);
+            const count = geometry.attributes.position.count;
+            for (let i = 0; i < count; i++) {
+                const x = geometry.attributes.position.getX(i);
+                const y = geometry.attributes.position.getY(i);
+                const dist = Math.sqrt(x*x + y*y);
+                const z = (Math.random() - 0.5) * 2 + Math.sin(dist * 0.5) * 2;
+                geometry.attributes.position.setZ(i, z);
+            }
+            geometry.computeVertexNormals();
+
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x00e1ff, 
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15
+            });
+
+            const terrain = new THREE.Mesh(geometry, material);
+            terrain.rotation.x = -Math.PI / 2;
+            scene.add(terrain);
+
+            // Particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 700; 
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 150;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.15,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6,
+            });
+            
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            particlesMesh.position.y = 10;
+            scene.add(particlesMesh);
+
+            let time = 0;
+            const animate = () => {
+                requestAnimationFrame(animate);
+                time += 0.002;
+                terrain.position.z = (time * 10) % 5; 
+                particlesMesh.rotation.y = time * 0.05;
+                renderer.render(scene, camera);
+            };
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                layoutCarousel(); // Re-layout carousel on resize
+            });
+        };
+
+        initAnimation();
+    </script>
+</body>
+</html>
